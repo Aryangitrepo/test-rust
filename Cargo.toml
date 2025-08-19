@@ -1,0 +1,11 @@
+[package]
+name = "web"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = {version="0.8.4",features = ["ws"]}
+tokio = { version = "1.47.1", features = ["rt-multi-thread", "macros"] }
+paho-mqtt = "0.13"
+ctrlc = "3.4.7"
+futures-util = "0.3.31"
