@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container1">
+      
+        <div class="weather">
+            <div class="weather-con">
+                <img src="img/weather.png" class=""w-icon>
+                <h1 id="temp">waiting...</h1>
+                <h4 id="city-name">Udupi</h4>
+            </div>
+            <div class="weather-con">
+                <img src="img/humidity.png" class=""w-icon>
+                <h1 id="hum">waiting...</h1>
+                <h4 id="name">Humidity</h4>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        // Create a WebSocket connection
+const socket = new WebSocket('ws://localhost:3000/ws');
+setTimeout(() => {
+    if (socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+        document.getElementById("temp").innerText = "Connection error";
+        document.getElementById("hum").innerText = "Connection error";
+    }
+}, 5000);
+socket.addEventListener('open', (event) => {
+    console.log('Connected to server');
+    socket.send('Hello Server!');
+});
+
+
+// Listen for messages from the server
+socket.addEventListener('message', (event) => {
+    const matches = event.data.match(/T:(\d+\.?\d*)C H:(\d+\.?\d*)%/);
+
+    if (matches) {
+        const temperature = parseFloat(matches[1]);
+        const humidity = parseFloat(matches[2]);
+
+        document.getElementById("temp").innerText=temperature+"C"
+        document.getElementById("hum").innerText=humidity+"%"
+    }
+});
+
+socket.addEventListener('close', (event) => {
+    console.log('Disconnected from server');
+});
+
+socket.addEventListener('error', (event) => {
+    console.error('WebSocket error:', event);
+});
+
+    </script>
+</body>
+</html>
